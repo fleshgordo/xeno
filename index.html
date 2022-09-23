@@ -30,12 +30,130 @@
 
 <body class=" font-family-karla flex">
     <div class="relative w-full flex flex-col h-screen overflow-y-hidden">
-      
+        <!-- Mobile Header & Nav -->
+        <header class="w-full bg-sidebar py-5 px-6">
+            <div class="flex items-center justify-between">
+                <span href="index.html" class="text-black text-3xl uppercase hover:text-gray-300">xeno-canto
+                    tracks</span>
+            </div>
+        </header>
+
         <div class="w-full h-screen overflow-x-hidden border-t flex flex-col">
             <div id="map" class="w-full h-screen">
+
             </div>
         </div>
     </div>
-    <script type="module" src="./index.js"></script>
+
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
+    <script>
+        let newContainer = []
+
+        let file_A = "./data/df_paginated_A.json";
+        let file_B = "./data/df_paginated_B.json";
+        let file_C = "./data/df_paginated_C.json";
+        let file_D = "./data/df_paginated_D.json";
+        let file_E = "./data/df_paginated_E.json";
+
+        let color_A = [0, 255, 0, 25];
+        let color_B = [0, 255, 255, 25];
+        let color_C = [0, 0, 255, 25];
+        let color_D = [255, 0, 255, 25];
+        let color_E = [255, 0, 0, 25];
+
+        fetch(file_A)
+            .then(response => response.json())
+            .then(function (data) {
+                //console.log(data)
+                data.forEach(data => {
+                    let newArray = [data["lng"], data["lat"]]
+                    newContainer.push({
+                        "position": newArray,
+                        "normal": [-1, 0, 0],
+                        "color": color_A
+                    })
+                });
+                return fetch(file_B);
+            })
+            .then(response => response.json())
+            .then(function (data) {
+                //console.log(data)
+                data.forEach(data => {
+                    let newArray = [data["lng"], data["lat"]]
+                    newContainer.push({
+                        "position": newArray,
+                        "normal": [-1, 0, 0],
+                        "color": color_B
+                    })
+                });
+                return fetch(file_C);
+            })
+            .then(response => response.json())
+            .then(function (data) {
+                //console.log(data)
+                data.forEach(data => {
+                    let newArray = [data["lng"], data["lat"]]
+                    newContainer.push({
+                        "position": newArray,
+                        "normal": [-1, 0, 0],
+                        "color": color_C
+                    })
+                });
+
+                 return fetch(file_D);
+            })
+            .then(response => response.json())
+            .then(function (data) {
+                //console.log(data)
+                data.forEach(data => {
+                    let newArray = [data["lng"], data["lat"]]
+                    newContainer.push({
+                        "position": newArray,
+                        "normal": [-1, 0, 0],
+                        "color": color_D
+                    })
+                });
+
+                  return fetch(file_E);
+            })
+            .then(response => response.json())
+            .then(function (data) {
+                //console.log(data)
+                data.forEach(data => {
+                    let newArray = [data["lng"], data["lat"]]
+                    newContainer.push({
+                        "position": newArray,
+                        "normal": [-1, 0, 0],
+                        "color": color_E
+                    })
+                });
+
+                //console.log(newContainer[0])
+                new deck.DeckGL({
+                    //mapStyle: 'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json',
+                    //mapStyle: '	https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+                    mapStyle: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
+                    initialViewState: {
+                        longitude: newContainer[0]["position"][0],
+                        latitude: newContainer[0]["position"][1],
+                        zoom: 3
+                    },
+                    controller: true,
+                    layers: [
+                        new deck.PointCloudLayer({
+                            id: 'path-layer',
+                            data: newContainer,
+                            pickable: false,
+                            pointSize: 3,
+                            getPosition: d => d.position,
+                            getNormal: d => d.normal,
+                            getColor: d => d.color
+                        })
+                    ]
+                });
+            });
+    </script>
 </body>
+
 </html>
